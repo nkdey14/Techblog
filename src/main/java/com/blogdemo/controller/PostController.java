@@ -1,6 +1,8 @@
 package com.blogdemo.controller;
 
+import com.blogdemo.dto.CommentDto;
 import com.blogdemo.dto.PostDto;
+import com.blogdemo.services.CommentService;
 import com.blogdemo.services.PostService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -15,8 +17,13 @@ public class PostController {
 
     private PostService postService;
 
-    public PostController(PostService postService) {
+    private CommentService commentService;
+
+    // constructor based injection
+    public PostController(PostService postService, CommentService commentService) {
+
         this.postService = postService;
+        this.commentService = commentService;
     }
 
     // create handler method, GET request and return model and view
@@ -81,7 +88,6 @@ public class PostController {
 
         post.setId(postId);
         postService.updatePost(post);
-        model.addAttribute("msg", "Blog updated successfully!");
         return "redirect:/admin/posts";
     }
 
@@ -94,15 +100,16 @@ public class PostController {
 
     // handler method to handle view post request
     @GetMapping("/admin/posts/{postUrl}/view")
-    public String viewPost(@PathVariable("postUrl") String postUrl,
-                           Model model){
+    public String viewPost(@PathVariable("postUrl") String postUrl, Model model){
+
         PostDto postDto = postService.findPostByUrl(postUrl);
         model.addAttribute("post", postDto);
         return "admin/view_post";
 
     }
+
     // handler method to handle search blog posts request
-    // localhost:8080/admin/posts/search?query=java
+    // localhost:8086/admin/posts/search?query=java
     @GetMapping("/admin/posts/search")
     public String searchPosts(@RequestParam(value = "query") String query,
                               Model model){
@@ -111,5 +118,21 @@ public class PostController {
         return "admin/posts";
     }
 
+    @GetMapping("/admin/posts/comments")
+    public String getComments(Model model){
+
+        List<CommentDto> comments = commentService.getComments();
+        model.addAttribute("comments", comments);
+        return "admin/comments";
+    }
+
+    @GetMapping("/admin/comments/{commentId}/delete")
+    public String deleteComment(@PathVariable("commentId") long commentId, Model model){
+
+        commentService.deleteComment(commentId);
+        List<CommentDto> comments = commentService.getComments();
+        model.addAttribute("comments", comments);
+        return "admin/comments";
+    }
 
 }

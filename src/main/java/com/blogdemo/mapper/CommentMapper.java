@@ -8,7 +8,7 @@ public class CommentMapper {
 
     // Map Comment to CommentDto
 
-    public CommentDto mapToCommentDto(Comment comment){
+    public static CommentDto mapToCommentDto(Comment comment){
 
         return CommentDto.builder()
                 .id(comment.getId())
@@ -22,7 +22,7 @@ public class CommentMapper {
 
     // Map CommentDto to Comment
 
-    public Comment mapToComment(CommentDto commentDto){
+    public static Comment mapToComment(CommentDto commentDto){
 
         return Comment.builder()
                 .id(commentDto.getId())

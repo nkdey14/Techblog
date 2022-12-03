@@ -17,9 +17,86 @@
       <div th:utext="${post.content}">
       </div>
     </div>
-
   </div>
+</div>
+<hr/>
+<div>
+  <h3>Comments:</h3>
+  <div th:each="comment: ${post.comment}">
+    <div>
+      <p><b>Name:</b><strong th:text="${comment.name}"></strong></p>
+      <p><b>Date:</b><strong th:text="${#temporals.format(comment.createdOn, 'dd MMMM YYYY')}"></strong></p>
+      <p><strong th:text="${comment.content}"></strong></p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h2>Leave a comment</h2>
+    </div>
+    <div class="card-body">
+      <form role="form" method="post" th:action="@{/{postUrl}/comments(postUrl=${post.url})}" th:object="${comment}" >
+        <div class="row">
+          <div class="col-md-5 mb-3">
+            <input
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    placeholder="Enter Name"
+                    th:field="*{name}"
+                    type="text"
+            />
+            <p th:if="${#fields.hasErrors('name')}" class="text-danger"
+               th:errors="*{name}"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 mb-3">
+            <input
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="Enter Email"
+                    th:field="*{email}"
+                    type="text"
+            />
+            <p th:if="${#fields.hasErrors('email')}" class="text-danger"
+               th:errors="*{email}"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 mb-3">
+               <textarea
+                       class="form-control"
+                       id="content"
+                       name="content"
+                       placeholder="Enter Comment"
+                       rows="8"
+                       th:field="*{content}"
+               >
+
+               </textarea>
+            <p th:if="${#fields.hasErrors('content')}" class="text-danger"
+               th:errors="*{content}"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-5">
+            <button
+                    class="btn btn-primary"
+                    type="submit"
+
+            >submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
 </div>
 <div th:replace="blog/footer :: footer"></div>
 </body>
 </html>
+

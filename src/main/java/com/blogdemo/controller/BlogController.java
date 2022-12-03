@@ -1,5 +1,6 @@
 package com.blogdemo.controller;
 
+import com.blogdemo.dto.CommentDto;
 import com.blogdemo.dto.PostDto;
 import com.blogdemo.services.PostService;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ public class BlogController {
     }
 
     // handler method to handle http://localhost:8086/
+    // http://localhost:8086/
     @GetMapping("/")
     public String viewBlogPosts(Model model){
         List<PostDto> postsResponse = postService.findAllPosts();
@@ -25,15 +27,18 @@ public class BlogController {
         return "blog/view_posts";
     }
 
-     // http://localhost:8080/
+     // http://localhost:8086/
     // handler method to handle view post request
     @GetMapping("/post/{postUrl}")
     private String showPost(@PathVariable("postUrl") String postUrl,
                             Model model){
         PostDto post = postService.findPostByUrl(postUrl);
+        CommentDto commentDto  = new CommentDto();
         model.addAttribute("post", post);
+        model.addAttribute("comment", commentDto);
         return "blog/blog_post";
     }
+
 
 
 }
